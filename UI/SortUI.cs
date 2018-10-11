@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Sanity404Studios.Sorting
 {
-    public class SortUI
+    public static class SortUI
     {
         public static void Main(string[] args)
         {

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Sanity404Studios.Sorting
 {
     public class Bogosort
     {
-        Random _rand;
+        private readonly Random _rand;
 
         public Bogosort()
         {
@@ -42,29 +43,20 @@ namespace Sanity404Studios.Sorting
                     // Check if array is in order
                     for (int i = 1; i <= size; i++)
                     {
-                        if (size == i && sorted[i - 1] < sorted[i - 2])
+                        if ((size == i && sorted[i - 1] < sorted[i - 2]) || (size != i && sorted[i] < sorted[i - 1]))
                         {
                             break;
                         }
                         // Detects the case of being at the end of array
-                        else if ((size == i && sorted[i - 1] > sorted[i - 2]) || (size == i && sorted[i - 1] > sorted[i - 2]))
+                        else if ((size == i && sorted[i - 1] > sorted[i - 2]))
                         {
                             List<int> contains = new List<int>();
                             contains.AddRange(sorted);
 
                             if (true == ContainsAll(contains, input))
                             {
-                                beenSorted = true;
                                 return sorted;
                             }
-                        }
-                        else if (sorted[i] < sorted[i - 1])
-                        {
-                            break;
-                        }
-                        else if (sorted[i] == sorted[i - 1])
-                        {
-                            continue;
                         }
                     }
 
@@ -105,17 +97,17 @@ namespace Sanity404Studios.Sorting
         /// Checks to make sure that all numbers are there in the sorted array
         /// </summary>
         /// <param name="sortedLst"></param>
+        /// <param name="arrToCheck"></param>
         /// <returns></returns>
-        private bool ContainsAll(List<int> sortedLst, int[] arrToCheck)
+        private static bool ContainsAll(ICollection<int> sortedLst, IReadOnlyList<int> arrToCheck)
         {
-
             for (int i = 0; i < sortedLst.Count; i++)
             {
                 if (false == sortedLst.Contains(arrToCheck[i]))
                 {
                     return false;
                 }
-                else if (true == sortedLst.Contains(arrToCheck[i]) && sortedLst.Count - 1 == i)
+                else if ((true == sortedLst.Contains(arrToCheck[i])) && (sortedLst.Count - 1 == i))
                 {
                     return true;
                 }
@@ -125,11 +117,11 @@ namespace Sanity404Studios.Sorting
                 }
                 else
                 {
-                    throw new Exception("Wut");
+                    throw new ConstraintException("Fell into else block. Check inputs.");
                 }
             }
 
-            throw new Exception("Contains all is out of bounds");
+            throw new ConstraintException("ContainsAll did not return anything.");
         }
     }
 }
